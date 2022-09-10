@@ -1,26 +1,54 @@
 package utils
 
 import (
-	"fmt"
-
 	"github.com/playwright-community/playwright-go"
 )
 
-func GetPage(url string) (playwright.Page, error) {
+func GetValueFromPage(url string, className string) (any, error) {
+
+	/*
+		Run the playwright
+	*/
 	pw, err := playwright.Run()
 	if err != nil {
-		fmt.Printf("could not start playwright: %v", err)
+		return nil, err
 	}
+
+	/*
+		Prepare the browser and create page
+	*/
 	browser, err := pw.Chromium.Launch()
 	if err != nil {
-		fmt.Printf("could not launch browser: %v", err)
+		return nil, err
 	}
 	page, err := browser.NewPage()
 	if err != nil {
-		fmt.Printf("could not create page: %v", err)
+		return nil, err
 	}
+
+	/*
+		Go to the target page and get the value
+	*/
 	if _, err = page.Goto(url); err != nil {
-		fmt.Printf("could not goto: %v", err)
+		return nil, err
 	}
-	return page, err
+	entries, err := page.QuerySelectorAll(className)
+	if err != nil {
+		return nil, err
+	}
+	title, err := entries[0].InnerHTML()
+	if err != nil {
+		return nil, err
+	}
+
+	/*
+	 Close the playwright
+	*/
+	if err = browser.Close(); err != nil {
+		return nil, err
+	}
+	if err = pw.Stop(); err != nil {
+		return nil, err
+	}
+	return title, nil
 }

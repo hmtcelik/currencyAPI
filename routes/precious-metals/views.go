@@ -8,18 +8,14 @@ import (
 )
 
 func PreciousMetals(c *fiber.Ctx) error {
-	page, err := utils.GetPage("https://abdulhamitcelik.com/")
+	title, err := utils.GetValueFromPage("https://abdulhamitcelik.com", ".title")
 	if err != nil {
-		return c.Status(400).JSON(utils.JsonResponse{Msg: "Error", Result: []any{}})
-	}
-	titleVal, err := page.QuerySelectorAll(".title")
-	if err != nil {
-		fmt.Printf("could not get entries: %v", err)
-		return c.Status(400).JSON(utils.JsonResponse{Msg: "Error", Result: []any{}})
+		fmt.Println(err)
+		return c.Status(400).JSON(utils.JsonResponse{Msg: err.Error(), Result: []any{}})
 	}
 	return c.Status(200).JSON(
 		utils.JsonResponse{
 			Msg:    "ok",
-			Result: titleVal,
+			Result: title,
 		})
 }

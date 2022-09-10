@@ -1,5 +1,6 @@
 FROM golang:1.19-alpine
 
+
 RUN mkdir /app
 
 ADD . /app

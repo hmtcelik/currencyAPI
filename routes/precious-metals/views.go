@@ -8,7 +8,7 @@ import (
 )
 
 func PreciousMetals(c *fiber.Ctx) error {
-	title, err := utils.GetValueFromPage(GoldExchangeUrl, ".title")
+	title, err := utils.GetValueFromPage(GoldExchangeUrl, "input.w-button")
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(400).JSON(utils.JsonResponse{Msg: err.Error(), Result: []any{}})

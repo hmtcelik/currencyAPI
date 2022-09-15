@@ -36,11 +36,13 @@ func GetValueFromPage(url string, className string) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	title, err := entries[0].InnerHTML()
-	if err != nil {
-		return nil, err
+	var title string = ""
+	if len(entries) != 0 {
+		title, err = entries[0].InnerHTML()
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	/*
 	 Close the playwright
 	*/

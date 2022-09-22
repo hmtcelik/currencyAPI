@@ -10,13 +10,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type MoneyUnitQueryParams struct {
 	Type string `query:"type,required"`
+	Date string `query:"date,required"`
 }
 
 func MoneyUnit(c *fiber.Ctx) error {
@@ -35,11 +35,21 @@ func MoneyUnit(c *fiber.Ctx) error {
 	}
 
 	/*
+		Generate Date Params
+	*/
+	var year string = params.Date[0:4]
+	var month string = params.Date[5:7]
+	var day string = params.Date[8:10]
+
+	/*
+		Check Date if it is weekend, then set last friday (because; at weekend, there is no data)
+	*/
+
+	/*
 		Find Uri and request
 	*/
 	var uri string = TCMB_URI
-	year, month, day := time.Now().AddDate(0, 0, -1).Date()
-	res, err := http.Get(fmt.Sprintf(uri, year, int(month), day, int(month), year))
+	res, err := http.Get(fmt.Sprintf(uri, year, month, day, month, year))
 	utils.ReturnErrorIfError(err, 400, c)
 
 	/*
